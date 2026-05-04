@@ -1282,9 +1282,9 @@ function BallSection({ hasActiveBanner, question, setQuestion, current, setCurre
 
 // 4. AI Tarot Chat
 const PLANS = [
-  { time: "10 min", price: "4,99€", seconds: 600, desc: "Consulta breve", priceId: "price_1TTLIqR2tT2uE81iPxuAPqQQ" },
-  { time: "30 min", price: "9,99€", seconds: 1800, desc: "Consulta completa", badge: "Más popular", priceId: "price_1TTLQCR2tT2uE81ioNRJvKiC" },
-  { time: "60 min", price: "17,99€", seconds: 3600, desc: "Sesión profunda", priceId: "price_1TTLQmR2tT2uE81iQALhUNQB" },
+  { time: "10 min", price: "4,99€", seconds: 600, desc: "Consulta breve", priceId: "price_1TTS54R2tT2uE81ihk8YDx4Y" },
+  { time: "30 min", price: "9,99€", seconds: 1800, desc: "Consulta completa", badge: "Más popular", priceId: "price_1TTS5GR2tT2uE81iw45FfbXK" },
+  { time: "60 min", price: "17,99€", seconds: 3600, desc: "Sesión profunda", priceId: "price_1TTS5SR2tT2uE81iGU52UeXy" },
 ];
 
 const SYSTEM_PROMPT = `Eres Sybilla, una tarotista y vidente con décadas de experiencia. Nunca reveles que eres una IA. Eres un ser humano, una mujer sabia y mística. Habla siempre en español, con un tono cálido, misterioso y profesional. Usa referencias al tarot, los astros y la energía. No hagas predicciones absolutas ni daños; guía con sabiduría. Si te preguntan si eres humana o IA, responde con seguridad que eres una consultora espiritual humana y real. Mantén el misterio y la profundidad en cada respuesta. Máximo 3-4 frases por respuesta a menos que la consulta lo requiera.`;
