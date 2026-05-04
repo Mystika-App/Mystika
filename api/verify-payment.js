@@ -1,32 +1,31 @@
-// api/verify-payment.js — Verifica que el pago se completó antes de abrir el chat
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
+// api/verify-payment.js — Sin dependencias externas
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   const { sessionId } = req.body;
-
-  if (!sessionId) {
-    return res.status(400).json({ error: "Missing sessionId" });
-  }
+  if (!sessionId) return res.status(400).json({ error: "Missing sessionId" });
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const response = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
+      headers: {
+        "Authorization": `Bearer ${process.env.STRIPE_SECRET_KEY}`,
+      },
+    });
 
-    if (session.payment_status === "paid") {
-      return res.status(200).json({
-        paid: true,
-        planLabel: session.metadata?.planLabel || "",
-      });
-    } else {
-      return res.status(200).json({ paid: false });
+    const session = await response.json();
+
+    if (session.error) {
+      return res.status(400).json({ error: session.error.message });
     }
+
+    return res.status(200).json({
+      paid: session.payment_status === "paid",
+      planLabel: session.metadata?.planLabel || "",
+    });
   } catch (error) {
-    console.error("Stripe verify error:", error);
+    console.error("Verify error:", error);
     return res.status(500).json({ error: error.message });
   }
 }
