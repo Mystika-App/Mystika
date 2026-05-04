@@ -1305,33 +1305,6 @@ function ChatSection({
   const scroll = () => msgEndRef.current?.scrollIntoView({ behavior: "smooth" });
   useEffect(scroll, [messages, loading]);
 
-  // On mount: check if returning from Stripe with a session_id
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session_id");
-    const planLabel = params.get("plan");
-    if (sessionId && phase === "payment") {
-      // Clean URL
-      window.history.replaceState({}, "", "/");
-      // Verify payment
-      fetch("/api/verify-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId }),
-      })
-        .then(r => r.json())
-        .then(data => {
-          if (data.paid) {
-            const plan = PLANS.find(p => p.time === planLabel) || PLANS[1];
-            const idx = PLANS.indexOf(plan);
-            setChosenPlan(idx >= 0 ? idx : 1);
-            startChat(plan);
-          }
-        })
-        .catch(() => {});
-    }
-  }, []);
-
   const startChat = (plan) => {
     const p = plan || PLANS[chosenPlan];
     setTimeLeft(p.seconds);
@@ -1541,7 +1514,41 @@ export default function Mystika() {
   const [ballCurrent, setBallCurrent] = useState(null);
   const [ballHistory, setBallHistory] = useState({});
 
-  // Timer lives here — never interrupted by tab changes
+  // ── Check for Stripe return on app load ──
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    const planLabel = params.get("plan");
+    if (!sessionId) return;
+
+    // Clean URL immediately
+    window.history.replaceState({}, "", "/");
+
+    // Verify payment and open chat automatically
+    fetch("/api/verify-payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.paid) {
+          const plan = PLANS.find(p => p.time === planLabel) || PLANS[1];
+          const idx = PLANS.findIndex(p => p.time === planLabel);
+          setChosenPlan(idx >= 0 ? idx : 1);
+          setChatTimeLeft(plan.seconds);
+          const welcome = {
+            role: "assistant",
+            content: "Bienvenida al espacio sagrado de consulta. Soy Sybilla. Las cartas están desplegadas y el velo es fino esta noche… ¿Qué inquietud trae tu alma?"
+          };
+          setChatMessages([{ from: "tarot", text: welcome.content }]);
+          setChatHistory([{ role: "user", content: "Hola" }, welcome]);
+          setChatPhase("chat");
+          setTab("chat"); // ← navigate directly to chat
+        }
+      })
+      .catch(() => {});
+  }, []);
   useEffect(() => {
     if (chatPhase === "chat") {
       timerRef.current = setInterval(() => {
