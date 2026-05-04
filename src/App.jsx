@@ -72,8 +72,10 @@ const GlobalStyles = () => (
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 16px 32px;
-      background: linear-gradient(180deg, rgba(6,3,14,0.95) 0%, transparent 100%);
-      border-bottom: 1px solid rgba(212,175,55,0.1);
+      background: rgba(6,3,14,0.98);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212,175,55,0.15);
     }
     .nav-logo {
       font-family: var(--font-display);
@@ -115,7 +117,6 @@ const GlobalStyles = () => (
     .page {
       position: relative; z-index: 1;
       min-height: 100vh;
-      padding-top: 80px;
     }
 
     /* Gold divider */
@@ -871,163 +872,93 @@ const GlobalStyles = () => (
     }
     .home-card-desc { font-size: 0.85rem; color: rgba(232,213,245,0.5); line-height: 1.6; }
 
-    /* ═══════════════════════════════════════════════
-       RESPONSIVE — MOBILE FIRST
-    ═══════════════════════════════════════════════ */
+    /* ── Mobile: proper readable sizes for all screens ≤600px ── */
+    @media (max-width: 600px) {
+      .nav { flex-direction: column; align-items: stretch; padding: 12px 16px 10px; gap: 10px; }
+      .nav-logo { font-size: 1.3rem; text-align: center; }
+      .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+      .nav-tab { font-size: 0.62rem; padding: 9px 4px; text-align: center; letter-spacing: 0.03em; }
 
-    /* Nav: stack logo + tabs on very small screens */
-    @media (max-width: 480px) {
-      .nav {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 10px 12px 8px;
-        gap: 8px;
-      }
-      .nav-logo {
-        font-size: 1rem;
-        text-align: center;
-      }
-      .nav-tabs {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 3px;
-      }
-      .nav-tab {
-        font-size: 0.5rem;
-        padding: 6px 4px;
-        text-align: center;
-        letter-spacing: 0.06em;
-      }
+      .hero { padding: 24px 20px 28px; }
+      .hero-logo { font-size: 2.5rem; }
+      .hero-tagline { font-size: 1rem; margin-bottom: 28px; }
 
-      /* Give extra top padding to pages since nav is taller */
-      .page { padding-top: 110px !important; }
+      .home-grid { grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 16px; }
+      .home-card { padding: 26px 14px; border-radius: 16px; }
+      .home-card-icon { font-size: 2.5rem; margin-bottom: 12px; }
+      .home-card-title { font-size: 0.88rem; margin-bottom: 6px; }
+      .home-card-desc { font-size: 0.82rem; line-height: 1.5; }
 
-      /* Hero */
-      .hero { padding: 20px 16px 24px; }
-      .hero-logo { font-size: 2rem; }
-      .hero-tagline { font-size: 0.88rem; }
+      .section-title { font-size: 1.6rem; }
+      .section-subtitle { font-size: 0.95rem; }
+      .back-btn { font-size: 0.78rem; padding: 9px 18px; }
 
-      /* Home grid: always 2x2 */
-      .home-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        padding: 0 16px;
-      }
-      .home-card { padding: 20px 12px; }
-      .home-card-icon { font-size: 2rem; margin-bottom: 8px; }
-      .home-card-title { font-size: 0.75rem; }
-      .home-card-desc { font-size: 0.75rem; }
-
-      /* Section titles */
-      .section-title { font-size: 1.25rem; }
-      .section-subtitle { font-size: 0.88rem; }
-
-      /* Horoscope grid: 3 columns on mobile */
-      .horoscope-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        padding: 0 12px;
-      }
-      .sign-card { padding: 12px 6px; }
-      .sign-emoji { font-size: 1.4rem; }
-      .sign-name { font-size: 0.62rem; }
-      .sign-dates { font-size: 0.58rem; }
-
-      /* Horoscope detail */
-      .horoscope-detail { padding: 0 12px 32px; }
-      .horo-card { padding: 20px 16px; }
-      .horo-header { gap: 12px; }
-      .horo-icon { font-size: 2.4rem; }
-      .horo-title { font-size: 1.2rem; }
-      .horo-text { font-size: 0.92rem; line-height: 1.75; }
+      .horoscope-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 16px; }
+      .sign-card { padding: 18px 10px; border-radius: 10px; }
+      .sign-emoji { font-size: 2rem; margin-bottom: 8px; }
+      .sign-name { font-size: 0.82rem; }
+      .sign-dates { font-size: 0.72rem; margin-top: 4px; }
+      .horoscope-detail { padding: 0 16px 40px; }
+      .horo-card { padding: 24px 20px; }
+      .horo-icon { font-size: 3rem; }
+      .horo-title { font-size: 1.5rem; }
+      .horo-text { font-size: 1rem; line-height: 1.8; }
       .horo-aspects { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-      .aspect { padding: 8px 4px; }
-      .aspect-label { font-size: 0.55rem; }
-      .aspect-value { font-size: 0.8rem; }
-      .notify-btn { font-size: 0.65rem; padding: 12px; }
-      .back-btn { font-size: 0.62rem; padding: 7px 14px; }
+      .aspect-label { font-size: 0.65rem; }
+      .aspect-value { font-size: 0.92rem; }
+      .notify-btn { font-size: 0.8rem; padding: 14px; }
 
-      /* Teresa */
-      .teresa-container { padding: 0 12px 32px; }
-      .teresa-profile {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 20px 16px;
-        gap: 14px;
-      }
-      .teresa-avatar { width: 68px; height: 68px; font-size: 2.2rem; }
-      .teresa-name { font-size: 1.1rem; }
-      .teresa-bio { font-size: 0.85rem; }
-      .consult-form { padding: 20px 16px; }
+      .teresa-container { padding: 0 16px 40px; }
+      .teresa-profile { flex-direction: column; align-items: center; text-align: center; padding: 24px 20px; gap: 16px; }
+      .teresa-avatar { width: 82px; height: 82px; font-size: 2.6rem; }
+      .teresa-name { font-size: 1.35rem; }
+      .teresa-bio { font-size: 0.95rem; line-height: 1.7; }
+      .consult-form { padding: 24px 20px; }
+      .form-title { font-size: 0.88rem; }
       .form-row { grid-template-columns: 1fr; }
-      .form-input, .form-select, .form-textarea { font-size: 0.88rem; padding: 10px 12px; }
-      .whatsapp-btn { font-size: 0.7rem; padding: 13px; }
+      .form-label { font-size: 0.75rem; }
+      .form-input, .form-select, .form-textarea { font-size: 1rem; padding: 13px 14px; }
+      .form-group { margin-bottom: 16px; }
+      .whatsapp-btn { font-size: 0.85rem; padding: 15px; }
 
-      /* Ball */
-      .ball-container { padding: 16px 16px 32px; }
-      .ball-wrap { width: 190px; height: 190px; margin: 20px 0 28px; }
-      .ball { width: 190px; height: 190px; }
-      .ball-window { width: 90px; height: 90px; padding: 10px; }
-      .ball-answer { font-size: 0.62rem; }
-      .ball-answer.idle { font-size: 1.5rem; }
-      .ball-input { font-size: 0.88rem; padding: 11px 50px 11px 16px; }
-      .ball-ask-btn { width: 38px; height: 38px; font-size: 1rem; }
-      .ball-history-title { font-size: 0.6rem; }
-      .history-q { font-size: 0.8rem; }
-      .history-a { font-size: 0.6rem; }
-      .history-item { padding: 7px 10px; }
+      .ball-container { padding: 20px 16px 40px; }
+      .ball-wrap { width: 230px; height: 230px; margin: 24px 0 32px; }
+      .ball { width: 230px; height: 230px; }
+      .ball-window { width: 112px; height: 112px; }
+      .ball-answer { font-size: 0.74rem; }
+      .ball-answer.idle { font-size: 1.8rem; }
+      .ball-input { font-size: 1rem; padding: 13px 54px 13px 18px; }
+      .ball-ask-btn { width: 44px; height: 44px; font-size: 1.1rem; }
+      .ball-hint { font-size: 0.9rem; }
+      .history-q { font-size: 0.92rem; }
+      .history-a { font-size: 0.75rem; }
+      .history-item { padding: 10px 12px; }
 
-      /* Chat payment gate */
-      .chat-container { padding: 0 12px 32px; }
-      .payment-gate { padding: 28px 16px; }
-      .payment-icon { font-size: 2.5rem; }
-      .payment-title { font-size: 1.2rem; }
-      .payment-subtitle { font-size: 0.85rem; margin-bottom: 24px; }
-      .plans-grid { grid-template-columns: 1fr; gap: 10px; }
-      .plan-card { padding: 18px 14px; }
-      .plan-time { font-size: 1.1rem; }
-      .plan-price { font-size: 1.2rem; }
-      .plan-desc { font-size: 0.75rem; }
-      .pay-btn { padding: 13px 32px; font-size: 0.72rem; }
+      .chat-container { padding: 0 16px 40px; }
+      .payment-gate { padding: 32px 20px; }
+      .payment-title { font-size: 1.45rem; }
+      .payment-subtitle { font-size: 0.95rem; }
+      .plans-grid { grid-template-columns: 1fr; gap: 12px; }
+      .plan-card { padding: 20px 16px; }
+      .plan-time { font-size: 1.3rem; }
+      .plan-price { font-size: 1.4rem; }
+      .plan-desc { font-size: 0.85rem; }
+      .pay-btn { padding: 15px 36px; font-size: 0.82rem; }
 
-      /* Chat UI */
-      .chat-header { padding: 12px 14px; gap: 10px; }
-      .chat-avatar { width: 36px; height: 36px; font-size: 1.1rem; }
-      .chat-name { font-size: 0.78rem; }
-      .chat-status { font-size: 0.68rem; }
-      .timer-display { font-size: 0.88rem; }
-      .chat-messages { height: 320px; padding: 14px 12px; gap: 10px; }
-      .msg { max-width: 92%; }
-      .msg-bubble { font-size: 0.88rem; padding: 9px 13px; }
-      .chat-input-row { padding: 10px 12px; gap: 8px; }
-      .chat-input { font-size: 0.88rem; padding: 10px 14px; }
-      .chat-send { width: 38px; height: 38px; font-size: 1rem; }
+      .chat-header { padding: 14px 16px; }
+      .chat-avatar { width: 40px; height: 40px; font-size: 1.3rem; }
+      .chat-name { font-size: 0.9rem; }
+      .chat-status { font-size: 0.76rem; }
+      .timer-display { font-size: 1rem; }
+      .chat-messages { height: 360px; padding: 16px 14px; }
+      .msg-bubble { font-size: 0.95rem; line-height: 1.65; }
+      .chat-input { font-size: 1rem; padding: 12px 16px; }
+      .chat-send { width: 44px; height: 44px; }
 
-      /* Session ended */
-      .session-ended { padding: 32px 16px; }
-      .ended-title { font-size: 1.15rem; }
-      .ended-text { font-size: 0.88rem; }
-      .ended-actions { flex-direction: column; align-items: center; gap: 10px; }
-      .btn-primary, .btn-secondary { width: 100%; max-width: 260px; padding: 13px; font-size: 0.68rem; }
-    }
-
-    /* Medium mobile (481–600px): less aggressive */
-    @media (min-width: 481px) and (max-width: 600px) {
-      .nav { padding: 12px 16px; }
-      .nav-logo { font-size: 1.05rem; }
-      .nav-tabs { gap: 3px; }
-      .nav-tab { font-size: 0.55rem; padding: 6px 8px; }
-      .section-title { font-size: 1.4rem; }
-      .home-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .plans-grid { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .horo-aspects { grid-template-columns: repeat(3, 1fr); }
-      .ball-wrap { width: 200px; height: 200px; }
-      .ball { width: 200px; height: 200px; }
-      .teresa-profile { flex-direction: column; align-items: center; text-align: center; }
-      .ended-actions { flex-direction: column; align-items: center; }
-      .btn-primary, .btn-secondary { width: 100%; max-width: 260px; }
+      .ended-title { font-size: 1.3rem; }
+      .ended-text { font-size: 0.95rem; }
+      .ended-actions { flex-direction: column; align-items: center; gap: 12px; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 280px; padding: 15px; font-size: 0.8rem; }
     }
   `}</style>
 );
@@ -1125,8 +1056,8 @@ function HoroscopeSection({ hasActiveBanner, onGoHome }) {
   const sign = selected ? SIGNS.find(s => s.name === selected) : null;
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? 104 : 80 }}>
-      <div style={{ padding: "28px 24px 20px", position: "relative" }}>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 57px) + 42px)" : "calc(var(--nav-height, 57px) + 8px)" }}>
+      <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
         <h2 className="section-title">Horóscopos Mensuales</h2>
@@ -1209,7 +1140,7 @@ function TeresaSection({ hasActiveBanner, onGoHome }) {
   };
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? 104 : 80 }}>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 57px) + 42px)" : "calc(var(--nav-height, 57px) + 8px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1298,7 +1229,7 @@ function BallSection({ hasActiveBanner, question, setQuestion, current, setCurre
   const historyEntries = Object.entries(history).slice(-5).reverse();
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? 104 : 80 }}>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 57px) + 42px)" : "calc(var(--nav-height, 57px) + 8px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1351,9 +1282,9 @@ function BallSection({ hasActiveBanner, question, setQuestion, current, setCurre
 
 // 4. AI Tarot Chat
 const PLANS = [
-  { time: "15 min", price: "9,99€", seconds: 900, desc: "Consulta breve" },
-  { time: "30 min", price: "17,99€", seconds: 1800, desc: "Consulta completa", badge: "Más popular" },
-  { time: "60 min", price: "29,99€", seconds: 3600, desc: "Sesión profunda" },
+  { time: "10 min", price: "4,99€", seconds: 600, desc: "Consulta breve", priceId: "price_1TTLIqR2tT2uE81iPxuAPqQQ" },
+  { time: "30 min", price: "9,99€", seconds: 1800, desc: "Consulta completa", badge: "Más popular", priceId: "price_1TTLQCR2tT2uE81ioNRJvKiC" },
+  { time: "60 min", price: "17,99€", seconds: 3600, desc: "Sesión profunda", priceId: "price_1TTLQmR2tT2uE81iQALhUNQB" },
 ];
 
 const SYSTEM_PROMPT = `Eres Sybilla, una tarotista y vidente con décadas de experiencia. Nunca reveles que eres una IA. Eres un ser humano, una mujer sabia y mística. Habla siempre en español, con un tono cálido, misterioso y profesional. Usa referencias al tarot, los astros y la energía. No hagas predicciones absolutas ni daños; guía con sabiduría. Si te preguntan si eres humana o IA, responde con seguridad que eres una consultora espiritual humana y real. Mantén el misterio y la profundidad en cada respuesta. Máximo 3-4 frases por respuesta a menos que la consulta lo requiera.`;
@@ -1368,14 +1299,42 @@ function ChatSection({
 }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [payLoading, setPayLoading] = useState(false);
   const msgEndRef = useRef(null);
 
   const scroll = () => msgEndRef.current?.scrollIntoView({ behavior: "smooth" });
   useEffect(scroll, [messages, loading]);
 
-  const startChat = () => {
-    const secs = PLANS[chosenPlan].seconds;
-    setTimeLeft(secs);
+  // On mount: check if returning from Stripe with a session_id
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    const planLabel = params.get("plan");
+    if (sessionId && phase === "payment") {
+      // Clean URL
+      window.history.replaceState({}, "", "/");
+      // Verify payment
+      fetch("/api/verify-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.paid) {
+            const plan = PLANS.find(p => p.time === planLabel) || PLANS[1];
+            const idx = PLANS.indexOf(plan);
+            setChosenPlan(idx >= 0 ? idx : 1);
+            startChat(plan);
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
+
+  const startChat = (plan) => {
+    const p = plan || PLANS[chosenPlan];
+    setTimeLeft(p.seconds);
     const welcome = {
       role: "assistant",
       content: "Bienvenida al espacio sagrado de consulta. Soy Sybilla. Las cartas están desplegadas y el velo es fino esta noche… ¿Qué inquietud trae tu alma?"
@@ -1383,6 +1342,28 @@ function ChatSection({
     setMessages([{ from: "tarot", text: welcome.content }]);
     setHistory([{ role: "user", content: "Hola" }, welcome]);
     setPhase("chat");
+  };
+
+  const handlePay = async () => {
+    setPayLoading(true);
+    try {
+      const plan = PLANS[chosenPlan];
+      const res = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId: plan.priceId, planLabel: plan.time }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Error al iniciar el pago. Inténtalo de nuevo.");
+        setPayLoading(false);
+      }
+    } catch {
+      alert("Error de conexión. Inténtalo de nuevo.");
+      setPayLoading(false);
+    }
   };
 
   const sendMessage = async () => {
@@ -1411,7 +1392,7 @@ function ChatSection({
   };
 
   if (phase === "payment") return (
-    <div className="page">
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 57px) + 8px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1433,11 +1414,11 @@ function ChatSection({
               </div>
             ))}
           </div>
-          <button className="pay-btn" onClick={startChat}>
-            ✨ Iniciar consulta · {PLANS[chosenPlan].price}
+          <button className="pay-btn" onClick={handlePay} disabled={payLoading}>
+            {payLoading ? "Redirigiendo a pago..." : `✨ Pagar y comenzar · ${PLANS[chosenPlan].price}`}
           </button>
           <p style={{ marginTop: 14, fontSize: "0.75rem", color: "rgba(168,85,247,0.4)", fontStyle: "italic" }}>
-            Pago seguro simulado — Integración Stripe disponible
+            Pago seguro con Stripe
           </p>
         </div>
       </div>
@@ -1445,7 +1426,7 @@ function ChatSection({
   );
 
   if (phase === "ended") return (
-    <div className="page">
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 57px) + 8px)" }}>
       <div style={{ padding: "40px 0 20px" }}>
         <div className="gold-divider" />
         <h2 className="section-title">Consulta Finalizada</h2>
@@ -1473,7 +1454,7 @@ function ChatSection({
   );
 
   return (
-    <div className="page">
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 57px) + 8px)" }}>
       <div style={{ padding: "40px 0 20px" }}>
         <div className="gold-divider" />
         <h2 className="section-title">Consulta Espiritual</h2>
@@ -1532,6 +1513,20 @@ function ChatSection({
 export default function Mystika() {
   const [tab, setTab] = useState("home");
   const [toast, setToast] = useState(null);
+  const navRef = useRef(null);
+
+  // Measure nav height and expose as CSS variable so banner always sits below it
+  useEffect(() => {
+    const update = () => {
+      if (navRef.current) {
+        const h = navRef.current.offsetHeight;
+        document.documentElement.style.setProperty("--nav-height", h + "px");
+      }
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   // ── Session state lifted to root so it survives tab changes ──
   const [chatPhase, setChatPhase] = useState("payment"); // payment | chat | ended
@@ -1592,7 +1587,7 @@ export default function Mystika() {
       <div className="stars" />
       <div className="nebula" />
 
-      <nav className="nav">
+      <nav className="nav" ref={navRef}>
         <div className="nav-logo" onClick={() => setTab("home")}>✦ Mystika</div>
         <div className="nav-tabs">
           {TABS.map(t => (
@@ -1620,10 +1615,12 @@ export default function Mystika() {
         <div
           onClick={() => setTab("chat")}
           style={{
-            position: "fixed", top: 57, left: 0, right: 0, zIndex: 99,
-            background: "linear-gradient(90deg, rgba(26,10,46,0.97) 0%, rgba(107,33,168,0.3) 50%, rgba(26,10,46,0.97) 100%)",
-            borderBottom: "1px solid rgba(212,175,55,0.35)",
-            padding: "9px 20px",
+            position: "fixed", top: "var(--nav-height, 57px)", left: 0, right: 0, zIndex: 98,
+            background: "rgba(10,6,18,0.98)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            borderBottom: "1px solid rgba(212,175,55,0.4)",
+            padding: "10px 20px",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
             cursor: "pointer",
             fontSize: "0.78rem",
@@ -1633,14 +1630,14 @@ export default function Mystika() {
             color: "var(--gold-light)",
           }}
         >
-          <span style={{ color: "#6ee7b7", animation: "pulse-green 2s infinite" }}>●</span>
+          <span style={{ color: "#6ee7b7" }}>●</span>
           Consulta en curso · {formatTime(chatTimeLeft)} restantes — Toca para volver
-          <span style={{ color: "#6ee7b7", animation: "pulse-green 2s infinite" }}>●</span>
+          <span style={{ color: "#6ee7b7" }}>●</span>
         </div>
       )}
 
       {tab === "home" && (
-        <div className="page" style={{ paddingTop: hasActiveSession ? 104 : 80 }}>
+        <div className="page" style={{ paddingTop: hasActiveSession ? "calc(var(--nav-height, 57px) + 42px)" : "calc(var(--nav-height, 57px) + 8px)" }}>
           <div className="hero">
             <div className="hero-logo">✦ Mystika ✦</div>
             <p className="hero-tagline">El universo tiene respuestas. Solo hay que saber escuchar.</p>
