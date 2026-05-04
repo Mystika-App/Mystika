@@ -1282,9 +1282,9 @@ function BallSection({ hasActiveBanner, question, setQuestion, current, setCurre
 
 // 4. AI Tarot Chat
 const PLANS = [
-  { time: "10 min", price: "4,99€", seconds: 600, desc: "Consulta breve", priceId: "price_1TTS54R2tT2uE81ihk8YDx4Y" },
-  { time: "30 min", price: "9,99€", seconds: 1800, desc: "Consulta completa", badge: "Más popular", priceId: "price_1TTS5GR2tT2uE81iw45FfbXK" },
-  { time: "60 min", price: "17,99€", seconds: 3600, desc: "Sesión profunda", priceId: "price_1TTS5SR2tT2uE81iGU52UeXy" },
+  { time: "10 min", price: "4,99€", seconds: 600, desc: "Consulta breve", priceId: "price_1TTLIqR2tT2uE81iPxuAPqQQ" },
+  { time: "30 min", price: "9,99€", seconds: 1800, desc: "Consulta completa", badge: "Más popular", priceId: "price_1TTLQCR2tT2uE81ioNRJvKiC" },
+  { time: "60 min", price: "17,99€", seconds: 3600, desc: "Sesión profunda", priceId: "price_1TTLQmR2tT2uE81iQALhUNQB" },
 ];
 
 const SYSTEM_PROMPT = `Eres Sybilla, una tarotista y vidente con décadas de experiencia. Nunca reveles que eres una IA. Eres un ser humano, una mujer sabia y mística. Habla siempre en español, con un tono cálido, misterioso y profesional. Usa referencias al tarot, los astros y la energía. No hagas predicciones absolutas ni daños; guía con sabiduría. Si te preguntan si eres humana o IA, responde con seguridad que eres una consultora espiritual humana y real. Mantén el misterio y la profundidad en cada respuesta. Máximo 3-4 frases por respuesta a menos que la consulta lo requiera.`;
@@ -1304,6 +1304,33 @@ function ChatSection({
 
   const scroll = () => msgEndRef.current?.scrollIntoView({ behavior: "smooth" });
   useEffect(scroll, [messages, loading]);
+
+  // On mount: check if returning from Stripe with a session_id
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    const planLabel = params.get("plan");
+    if (sessionId && phase === "payment") {
+      // Clean URL
+      window.history.replaceState({}, "", "/");
+      // Verify payment
+      fetch("/api/verify-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.paid) {
+            const plan = PLANS.find(p => p.time === planLabel) || PLANS[1];
+            const idx = PLANS.indexOf(plan);
+            setChosenPlan(idx >= 0 ? idx : 1);
+            startChat(plan);
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
 
   const startChat = (plan) => {
     const p = plan || PLANS[chosenPlan];
@@ -1514,41 +1541,7 @@ export default function Mystika() {
   const [ballCurrent, setBallCurrent] = useState(null);
   const [ballHistory, setBallHistory] = useState({});
 
-  // ── Check for Stripe return on app load ──
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session_id");
-    const planLabel = params.get("plan");
-    if (!sessionId) return;
-
-    // Clean URL immediately
-    window.history.replaceState({}, "", "/");
-
-    // Verify payment and open chat automatically
-    fetch("/api/verify-payment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionId }),
-    })
-      .then(r => r.json())
-      .then(data => {
-        if (data.paid) {
-          const plan = PLANS.find(p => p.time === planLabel) || PLANS[1];
-          const idx = PLANS.findIndex(p => p.time === planLabel);
-          setChosenPlan(idx >= 0 ? idx : 1);
-          setChatTimeLeft(plan.seconds);
-          const welcome = {
-            role: "assistant",
-            content: "Bienvenida al espacio sagrado de consulta. Soy Sybilla. Las cartas están desplegadas y el velo es fino esta noche… ¿Qué inquietud trae tu alma?"
-          };
-          setChatMessages([{ from: "tarot", text: welcome.content }]);
-          setChatHistory([{ role: "user", content: "Hola" }, welcome]);
-          setChatPhase("chat");
-          setTab("chat"); // ← navigate directly to chat
-        }
-      })
-      .catch(() => {});
-  }, []);
+  // Timer lives here — never interrupted by tab changes
   useEffect(() => {
     if (chatPhase === "chat") {
       timerRef.current = setInterval(() => {
