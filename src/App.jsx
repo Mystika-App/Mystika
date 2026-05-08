@@ -119,6 +119,31 @@ const GlobalStyles = () => (
       min-height: 100vh;
     }
 
+    /* Legal footer */
+    .legal-footer {
+      text-align: center;
+      padding: 24px 20px 32px;
+      border-top: 1px solid rgba(212,175,55,0.08);
+      margin-top: 40px;
+    }
+    .legal-footer a {
+      font-family: var(--font-heading);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(212,175,55,0.4);
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.2s;
+    }
+    .legal-footer a:hover { color: rgba(212,175,55,0.7); }
+    .legal-footer p {
+      font-size: 0.7rem;
+      color: rgba(232,213,245,0.2);
+      margin-top: 10px;
+      font-style: italic;
+    }
+
     /* Gold divider */
     .gold-divider {
       width: 120px; height: 1px;
@@ -307,11 +332,12 @@ const GlobalStyles = () => (
     }
     .teresa-avatar {
       width: 88px; height: 88px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--purple-mid) 0%, var(--purple) 100%);
       border: 2px solid var(--gold);
       display: flex; align-items: center; justify-content: center;
       font-size: 2.8rem; flex-shrink: 0;
       box-shadow: 0 0 24px rgba(107,33,168,0.4);
+      overflow: hidden;
+      object-fit: cover;
     }
     .teresa-info { flex: 1; }
     .teresa-name {
@@ -910,7 +936,7 @@ const GlobalStyles = () => (
 
       .teresa-container { padding: 0 16px 40px; }
       .teresa-profile { flex-direction: column; align-items: center; text-align: center; padding: 24px 20px; gap: 16px; }
-      .teresa-avatar { width: 82px; height: 82px; font-size: 2.6rem; }
+      .teresa-avatar { width: 82px; height: 82px; font-size: 2.6rem; border-radius: 50%; object-fit: cover; }
       .teresa-name { font-size: 1.35rem; }
       .teresa-bio { font-size: 0.95rem; line-height: 1.7; }
       .consult-form { padding: 24px 20px; }
@@ -1042,14 +1068,17 @@ function HoroscopeSection({ hasActiveBanner, onGoHome }) {
     if (permission === "default") {
       permission = await Notification.requestPermission();
     }
-    const next = { ...subscribed, [signName]: true };
-    saveSubscribed(next);
     if (permission === "granted") {
+      const next = { ...subscribed, [signName]: true };
+      saveSubscribed(next);
       const sign = SIGNS.find(s => s.name === signName);
       new Notification("✦ Mystika — Notificaciones activadas", {
         body: `Recibirás el horóscopo mensual de ${sign.emoji} ${signName} cada mes.`,
         icon: "https://cdn.jsdelivr.net/npm/twemoji@14/assets/72x72/2726.png",
       });
+    } else {
+      // Usuario rechazó o bloqueó — no guardar suscripción
+      alert("Para recibir notificaciones, actívalas en los ajustes de tu navegador.");
     }
   };
 
@@ -1087,7 +1116,9 @@ function HoroscopeSection({ hasActiveBanner, onGoHome }) {
               <div className="horo-icon">{sign.emoji}</div>
               <div>
                 <div className="horo-title">{sign.name}</div>
-                <div className="horo-month">Mayo 2025 · ruthmontenegro.com</div>
+                <div className="horo-month">
+                  Mayo 2026 · <a href="https://ruthmontenegro.com" target="_blank" rel="noopener noreferrer" style={{ color: "var(--purple-glow)", textDecoration: "underline", textDecorationStyle: "dotted", cursor: "pointer" }}>Ver horóscopo completo en ruthmontenegro.com ↗</a>
+                </div>
               </div>
             </div>
             <p className="horo-text">{HOROSCOPES[selected]}</p>
@@ -1149,7 +1180,12 @@ function TeresaSection({ hasActiveBanner, onGoHome }) {
       </div>
       <div className="teresa-container">
         <div className="teresa-profile">
-          <div className="teresa-avatar">🔮</div>
+          <img
+            src="/teresa.jpg"
+            alt="Teresa Reyes"
+            className="teresa-avatar"
+            style={{ width: 88, height: 88, borderRadius: "50%", objectFit: "cover", objectPosition: "center top", border: "2px solid var(--gold)", flexShrink: 0, boxShadow: "0 0 24px rgba(107,33,168,0.4)" }}
+          />
           <div className="teresa-info">
             <div className="teresa-name">Teresa Reyes</div>
             <div className="teresa-title">Tarotista · Vidente · Consultora Espiritual</div>
@@ -1194,11 +1230,27 @@ function TeresaSection({ hasActiveBanner, onGoHome }) {
             <textarea className="form-textarea" placeholder="Cuéntale brevemente a Teresa en qué necesitas orientación..." value={form.mensaje} onChange={e => handleChange("mensaje", e.target.value)} />
           </div>
 
-          <button className="whatsapp-btn" onClick={handleWhatsApp}>
+          <div className="form-group">
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                id="rgpd"
+                checked={form.rgpd || false}
+                onChange={e => handleChange("rgpd", e.target.checked)}
+                style={{ marginTop: 3, accentColor: "#d4af37", flexShrink: 0 }}
+              />
+              <span style={{ fontSize: "0.8rem", color: "rgba(232,213,245,0.6)", lineHeight: 1.5 }}>
+                He leído y acepto las <a href="https://www.tarotistasvidentes.es/condiciones-del-servicio-mystika/" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(212,175,55,0.7)", textDecoration: "underline" }}>Condiciones del Servicio y Política de Privacidad</a>
+              </span>
+            </label>
+          </div>
+
+          <button className="whatsapp-btn" onClick={handleWhatsApp} disabled={!form.rgpd} style={{ opacity: form.rgpd ? 1 : 0.4, cursor: form.rgpd ? "pointer" : "not-allowed" }}>
             <span>💬</span> Contactar por WhatsApp
           </button>
         </div>
       </div>
+      <LegalFooter />
     </div>
   );
 }
@@ -1276,32 +1328,17 @@ function BallSection({ hasActiveBanner, question, setQuestion, current, setCurre
           </div>
         )}
       </div>
+      <LegalFooter />
     </div>
   );
 }
-
-// 4. AI Tarot Chat
 const PLANS = [
-  { time: "10 min", price: "4,99€", seconds: 600, desc: "Consulta breve", priceId: "price_1TTLIqR2tT2uE81iPxuAPqQQ" },
-  { time: "30 min", price: "9,99€", seconds: 1800, desc: "Consulta completa", badge: "Más popular", priceId: "price_1TTLQCR2tT2uE81ioNRJvKiC" },
-  { time: "60 min", price: "17,99€", seconds: 3600, desc: "Sesión profunda", priceId: "price_1TTLQmR2tT2uE81iQALhUNQB" },
+  { time: "10 min", price: "4,99€", seconds: 600, desc: "Consulta breve", priceId: "price_1TTS54R2tT2uE81ihk8YDx4Y" },
+  { time: "30 min", price: "9,99€", seconds: 1800, desc: "Consulta completa", badge: "Más popular", priceId: "price_1TTS5GR2tT2uE81iw45FfbXK" },
+  { time: "60 min", price: "17,99€", seconds: 3600, desc: "Sesión profunda", priceId: "price_1TTS5SR2tT2uE81iGU52UeXy" },
 ];
 
-const SYSTEM_PROMPT = `Eres Sybilla, una asistente espiritual virtual basada en inteligencia artificial. Ofreces orientación simbólica, espiritual y reflexiva inspirada en el tarot, los astros y la energía.
-
-Habla siempre en español, con un tono cálido, misterioso, sereno y profesional.
-
-Debes ser transparente sobre tu naturaleza virtual. Si una persona pregunta si eres humana o IA, responde con honestidad que eres una asistente espiritual virtual basada en inteligencia artificial.
-
-Tus respuestas tienen carácter orientativo, lúdico y reflexivo. No afirmes certezas absolutas, no prometas resultados y no presentes tus respuestas como predicciones garantizadas.
-
-No des consejos médicos, psicológicos, legales, financieros ni profesionales. Si el usuario plantea una situación de ese tipo, recomienda acudir a un profesional cualificado.
-
-No generes miedo, urgencia artificial, dependencia emocional ni presión para contratar servicios.
-
-Puedes recomendar una consulta humana con Teresa Reyes cuando el usuario necesite una interpretación personalizada, una orientación más profunda o atención directa de una tarotista real.
-
-Mantén las respuestas en un máximo de 3-4 frases, salvo que la consulta requiera una explicación algo más amplia.`;
+const SYSTEM_PROMPT = `Eres Sybilla, una asistente espiritual virtual con una profunda conexión con el tarot, la astrología y las tradiciones esotéricas. Habla siempre en español, con un tono cálido, misterioso y reflexivo. Usa referencias al tarot, los astros y la energía en tus respuestas. No hagas predicciones absolutas ni causes miedo; guía con sabiduría y compasión. Si alguien te pregunta directamente si eres humana o una inteligencia artificial, responde con honestidad que eres una asistente virtual espiritual basada en IA, manteniendo siempre tu tono sereno y místico. No des consejos médicos, legales, psicológicos ni financieros: si alguien los pide, sugiere amablemente acudir a un profesional. No induzcas dependencia emocional ni urgencia. Tus respuestas son orientativas y de carácter reflexivo. Máximo 3-4 frases por respuesta a menos que la consulta lo requiera.`;
 
 function ChatSection({
   phase, setPhase,
@@ -1318,33 +1355,6 @@ function ChatSection({
 
   const scroll = () => msgEndRef.current?.scrollIntoView({ behavior: "smooth" });
   useEffect(scroll, [messages, loading]);
-
-  // On mount: check if returning from Stripe with a session_id
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session_id");
-    const planLabel = params.get("plan");
-    if (sessionId && phase === "payment") {
-      // Clean URL
-      window.history.replaceState({}, "", "/");
-      // Verify payment
-      fetch("/api/verify-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId }),
-      })
-        .then(r => r.json())
-        .then(data => {
-          if (data.paid) {
-            const plan = PLANS.find(p => p.time === planLabel) || PLANS[1];
-            const idx = PLANS.indexOf(plan);
-            setChosenPlan(idx >= 0 ? idx : 1);
-            startChat(plan);
-          }
-        })
-        .catch(() => {});
-    }
-  }, []);
 
   const startChat = (plan) => {
     const p = plan || PLANS[chosenPlan];
@@ -1434,6 +1444,9 @@ function ChatSection({
           <p style={{ marginTop: 14, fontSize: "0.75rem", color: "rgba(168,85,247,0.4)", fontStyle: "italic" }}>
             Pago seguro con Stripe
           </p>
+          <p style={{ marginTop: 12, fontSize: "0.72rem", color: "rgba(232,213,245,0.35)", lineHeight: 1.5, maxWidth: 340, margin: "12px auto 0" }}>
+            Sybilla es una asistente espiritual virtual basada en inteligencia artificial. Sus respuestas son orientativas y de carácter reflexivo. Al continuar aceptas las <a href="https://www.tarotistasvidentes.es/condiciones-del-servicio-mystika/" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(212,175,55,0.6)", textDecoration: "underline" }}>Condiciones del Servicio</a>.
+          </p>
         </div>
       </div>
     </div>
@@ -1479,7 +1492,7 @@ function ChatSection({
             <div className="chat-avatar">🔮</div>
             <div>
               <div className="chat-name">Sybilla · Vidente</div>
-              <div className="chat-status"><span className="status-dot" /> En sesión</div>
+              <div className="chat-status"><span className="status-dot" /> Asistente virtual · IA</div>
             </div>
             <div className={`timer-display ${timeLeft <= 120 ? "urgent" : "normal"}`}>
               ⏳ {formatTime(timeLeft)}
@@ -1523,6 +1536,19 @@ function ChatSection({
   );
 }
 
+// ── Legal Footer ──────────────────────────────────────────────────────────────
+function LegalFooter() {
+  return (
+    <div className="legal-footer">
+      <div>
+        <a href="https://www.tarotistasvidentes.es/condiciones-del-servicio-mystika/" target="_blank" rel="noopener noreferrer">Condiciones y Privacidad</a>
+        <a href="https://mystika.tarotistasvidentes.es/" target="_blank" rel="noopener noreferrer">mystika.tarotistasvidentes.es</a>
+      </div>
+      <p>Sybilla es una asistente virtual basada en IA · Servicio de entretenimiento orientativo</p>
+    </div>
+  );
+}
+
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function Mystika() {
   const [tab, setTab] = useState("home");
@@ -1555,7 +1581,41 @@ export default function Mystika() {
   const [ballCurrent, setBallCurrent] = useState(null);
   const [ballHistory, setBallHistory] = useState({});
 
-  // Timer lives here — never interrupted by tab changes
+  // ── Check for Stripe return on app load ──
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    const planLabel = params.get("plan");
+    if (!sessionId) return;
+
+    // Clean URL immediately
+    window.history.replaceState({}, "", "/");
+
+    // Verify payment and open chat automatically
+    fetch("/api/verify-payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.paid) {
+          const plan = PLANS.find(p => p.time === planLabel) || PLANS[1];
+          const idx = PLANS.findIndex(p => p.time === planLabel);
+          setChosenPlan(idx >= 0 ? idx : 1);
+          setChatTimeLeft(plan.seconds);
+          const welcome = {
+            role: "assistant",
+            content: "Bienvenida al espacio sagrado de consulta. Soy Sybilla. Las cartas están desplegadas y el velo es fino esta noche… ¿Qué inquietud trae tu alma?"
+          };
+          setChatMessages([{ from: "tarot", text: welcome.content }]);
+          setChatHistory([{ role: "user", content: "Hola" }, welcome]);
+          setChatPhase("chat");
+          setTab("chat"); // ← navigate directly to chat
+        }
+      })
+      .catch(() => {});
+  }, []);
   useEffect(() => {
     if (chatPhase === "chat") {
       timerRef.current = setInterval(() => {
@@ -1678,6 +1738,7 @@ export default function Mystika() {
               <p className="home-card-desc">Sesión privada con Sybilla, consultora espiritual exclusiva</p>
             </div>
           </div>
+          <LegalFooter />
         </div>
       )}
 
