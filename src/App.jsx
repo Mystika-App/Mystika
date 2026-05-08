@@ -1085,11 +1085,7 @@ function HoroscopeSection({ hasActiveBanner, onGoHome }) {
   const sign = selected ? SIGNS.find(s => s.name === selected) : null;
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 57px) + 42px)" : "calc(var(--nav-height, 57px) + 8px)" }}>
-      <div style={{ padding: "28px 24px 20px" }}>
-        <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
-        <div className="gold-divider" />
-        <h2 className="section-title">Horóscopos Mensuales</h2>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
         <p className="section-subtitle">Descubre lo que las estrellas revelan para ti este mes</p>
       </div>
 
@@ -1171,7 +1167,7 @@ function TeresaSection({ hasActiveBanner, onGoHome }) {
   };
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 57px) + 42px)" : "calc(var(--nav-height, 57px) + 8px)" }}>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1281,7 +1277,7 @@ function BallSection({ hasActiveBanner, question, setQuestion, current, setCurre
   const historyEntries = Object.entries(history).slice(-5).reverse();
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 57px) + 42px)" : "calc(var(--nav-height, 57px) + 8px)" }}>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1416,7 +1412,7 @@ function ChatSection({
   };
 
   if (phase === "payment") return (
-    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 57px) + 8px)" }}>
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 16px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1453,7 +1449,7 @@ function ChatSection({
   );
 
   if (phase === "ended") return (
-    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 57px) + 8px)" }}>
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 16px)" }}>
       <div style={{ padding: "40px 0 20px" }}>
         <div className="gold-divider" />
         <h2 className="section-title">Consulta Finalizada</h2>
@@ -1481,7 +1477,7 @@ function ChatSection({
   );
 
   return (
-    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 57px) + 8px)" }}>
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 16px)" }}>
       <div style={{ padding: "40px 0 20px" }}>
         <div className="gold-divider" />
         <h2 className="section-title">Consulta Espiritual</h2>
@@ -1564,9 +1560,11 @@ export default function Mystika() {
       }
     };
     update();
+    // Small delay to ensure fonts/layout are ready on mobile
+    const t = setTimeout(update, 100);
     window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
+    return () => { clearTimeout(t); window.removeEventListener("resize", update); };
+  }, [tab]);
 
   // ── Session state lifted to root so it survives tab changes ──
   const [chatPhase, setChatPhase] = useState("payment"); // payment | chat | ended
@@ -1689,7 +1687,7 @@ export default function Mystika() {
         <div
           onClick={() => setTab("chat")}
           style={{
-            position: "fixed", top: "var(--nav-height, 57px)", left: 0, right: 0, zIndex: 98,
+            position: "fixed", top: "var(--nav-height, 100px)", left: 0, right: 0, zIndex: 98,
             background: "rgba(10,6,18,0.98)",
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
@@ -1711,7 +1709,7 @@ export default function Mystika() {
       )}
 
       {tab === "home" && (
-        <div className="page" style={{ paddingTop: hasActiveSession ? "calc(var(--nav-height, 57px) + 42px)" : "calc(var(--nav-height, 57px) + 8px)" }}>
+        <div className="page" style={{ paddingTop: hasActiveSession ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
           <div className="hero">
             <div className="hero-logo">✦ Mystika ✦</div>
             <p className="hero-tagline">El universo tiene respuestas. Solo hay que saber escuchar.</p>
