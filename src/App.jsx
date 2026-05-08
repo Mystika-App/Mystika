@@ -1086,6 +1086,10 @@ function HoroscopeSection({ hasActiveBanner, onGoHome }) {
 
   return (
     <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
+      <div style={{ padding: "28px 24px 20px" }}>
+        <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
+        <div className="gold-divider" />
+        <h2 className="section-title">Horóscopos Mensuales</h2>
         <p className="section-subtitle">Descubre lo que las estrellas revelan para ti este mes</p>
       </div>
 
