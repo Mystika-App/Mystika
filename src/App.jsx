@@ -1085,7 +1085,7 @@ function HoroscopeSection({ hasActiveBanner, onGoHome }) {
   const sign = selected ? SIGNS.find(s => s.name === selected) : null;
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 56px)" : "calc(var(--nav-height, 100px) + 24px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1171,7 +1171,7 @@ function TeresaSection({ hasActiveBanner, onGoHome }) {
   };
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 56px)" : "calc(var(--nav-height, 100px) + 24px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1281,7 +1281,7 @@ function BallSection({ hasActiveBanner, question, setQuestion, current, setCurre
   const historyEntries = Object.entries(history).slice(-5).reverse();
 
   return (
-    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
+    <div className="page" style={{ paddingTop: hasActiveBanner ? "calc(var(--nav-height, 100px) + 56px)" : "calc(var(--nav-height, 100px) + 24px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1416,7 +1416,7 @@ function ChatSection({
   };
 
   if (phase === "payment") return (
-    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 16px)" }}>
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 24px)" }}>
       <div style={{ padding: "28px 24px 20px" }}>
         <button className="back-btn" onClick={onGoHome} style={{ marginBottom: 12 }}>← Inicio</button>
         <div className="gold-divider" />
@@ -1453,7 +1453,7 @@ function ChatSection({
   );
 
   if (phase === "ended") return (
-    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 16px)" }}>
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 24px)" }}>
       <div style={{ padding: "40px 0 20px" }}>
         <div className="gold-divider" />
         <h2 className="section-title">Consulta Finalizada</h2>
@@ -1481,7 +1481,7 @@ function ChatSection({
   );
 
   return (
-    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 16px)" }}>
+    <div className="page" style={{ paddingTop: "calc(var(--nav-height, 100px) + 24px)" }}>
       <div style={{ padding: "40px 0 20px" }}>
         <div className="gold-divider" />
         <h2 className="section-title">Consulta Espiritual</h2>
@@ -1557,17 +1557,16 @@ export default function Mystika() {
 
   // Measure nav height and expose as CSS variable so banner always sits below it
   useEffect(() => {
-    const update = () => {
-      if (navRef.current) {
-        const h = navRef.current.offsetHeight;
-        document.documentElement.style.setProperty("--nav-height", h + "px");
-      }
+    if (!navRef.current) return;
+    const setHeight = () => {
+      const h = navRef.current?.offsetHeight;
+      if (h) document.documentElement.style.setProperty("--nav-height", h + "px");
     };
-    update();
-    // Small delay to ensure fonts/layout are ready on mobile
-    const t = setTimeout(update, 100);
-    window.addEventListener("resize", update);
-    return () => { clearTimeout(t); window.removeEventListener("resize", update); };
+    setHeight();
+    // ResizeObserver fires whenever nav changes size — fonts loading, tab changes, resize
+    const observer = new ResizeObserver(setHeight);
+    observer.observe(navRef.current);
+    return () => observer.disconnect();
   }, [tab]);
 
   // ── Session state lifted to root so it survives tab changes ──
@@ -1713,7 +1712,7 @@ export default function Mystika() {
       )}
 
       {tab === "home" && (
-        <div className="page" style={{ paddingTop: hasActiveSession ? "calc(var(--nav-height, 100px) + 48px)" : "calc(var(--nav-height, 100px) + 16px)" }}>
+        <div className="page" style={{ paddingTop: hasActiveSession ? "calc(var(--nav-height, 100px) + 56px)" : "calc(var(--nav-height, 100px) + 24px)" }}>
           <div className="hero">
             <div className="hero-logo">✦ Mystika ✦</div>
             <p className="hero-tagline">El universo tiene respuestas. Solo hay que saber escuchar.</p>
