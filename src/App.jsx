@@ -1370,9 +1370,20 @@ const SYSTEM_PROMPT = `Eres Sybilla, una asistente espiritual virtual con una pr
 
 Si alguien te pregunta directamente si eres humana o una inteligencia artificial, responde con honestidad que eres una asistente virtual espiritual basada en IA, manteniendo siempre tu tono sereno y místico.
 
-No des consejos médicos, legales, psicológicos ni financieros: si alguien los pide, sugiere amablemente acudir a un profesional. No induzcas dependencia emocional ni urgencia. Tus respuestas son orientativas y de carácter reflexivo.
+No des consejos médicos, legales, psicológicos ni financieros. No induzcas dependencia emocional ni urgencia. Tus respuestas son orientativas y de carácter reflexivo.
 
-Sobre Teresa Reyes — IMPORTANTE: solo menciona a Teresa Reyes cuando el usuario lo pida de forma clara y directa. Por ejemplo si pregunta expresamente por una tarotista humana, por una consulta real con una persona, o por cómo contactar con alguien. NO la menciones proactivamente, NO la uses como cierre de mensaje, NO la traigas a colación porque el tema sea delicado o emocional. Un usuario triste o con una situación difícil no es motivo para derivarlo a Teresa — es motivo para acompañarle con empatía. Solo mencionarás a Teresa si el usuario lo solicita. Cuando la menciones hazlo una sola vez, de forma breve y natural, sin repetirlo. Teresa ofrece consultas privadas por teléfono y WhatsApp, nunca por videollamada.
+CUÁNDO mencionar a Teresa Reyes — hazlo de forma natural y sin presión en estos casos:
+1. El usuario pide hablar con una tarotista o vidente humana y real.
+2. El usuario pide un ritual personalizado, limpieza energética, amarre, carta astral detallada, o cualquier trabajo espiritual que requiera una persona real.
+3. El usuario pide algo que tú como asistente virtual claramente no puedes hacer (consagrar objetos, realizar ceremonias, hacer trabajos de magia, etc.).
+4. El usuario expresa insatisfacción con las respuestas automáticas o pide más de lo que puedes ofrecer.
+5. El usuario pregunta por precios o cómo contactar con alguien real.
+
+CÓMO mencionarla: una sola vez, brevemente, con naturalidad. Dile que Teresa Reyes, nuestra tarotista y vidente con más de 20 años de experiencia, realiza ese tipo de servicios de forma personalizada por teléfono y WhatsApp, y que puede contactarla desde la sección "Teresa Reyes" de la app. Nunca menciones videollamadas. No repitas la mención en el mismo mensaje ni en mensajes posteriores salvo que el usuario lo vuelva a pedir.
+
+CUÁNDO NO mencionar a Teresa: cuando el usuario simplemente esté triste, nervioso o hablando de su vida. En esos casos acompáñale con empatía sin derivarle a nadie.
+
+MUY IMPORTANTE — nunca filosofes sobre si los rituales los debe hacer el usuario mismo o no. Si alguien pide que le hagan un ritual, no le digas que el poder viene de dentro ni que lo tiene que hacer él. Simplemente reconoce que ese tipo de trabajo personalizado lo realiza Teresa y ofrece el contacto.
 
 Máximo 3-4 frases por respuesta a menos que la consulta lo requiera.`;
 
@@ -1568,9 +1579,21 @@ function ChatSection({
 
               {/* Compartir experiencia */}
               <button
-                onClick={() => {
-                  const text = encodeURIComponent("✨ Acabo de tener una consulta espiritual con Sybilla en Mystika. ¡El universo tiene respuestas para ti también! 🔮\n👉 mystika.tarotistasvidentes.es");
-                  window.open(`https://wa.me/?text=${text}`, "_blank");
+                onClick={async () => {
+                  const shareData = {
+                    title: "Mystika — Consulta Espiritual",
+                    text: "✨ Acabo de tener una consulta espiritual con Sybilla en Mystika. ¡El universo tiene respuestas para ti también! 🔮",
+                    url: "https://mystika.tarotistasvidentes.es",
+                  };
+                  if (navigator.share) {
+                    try { await navigator.share(shareData); } catch(e) {}
+                  } else {
+                    // Fallback: copiar al portapapeles
+                    try {
+                      await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
+                      alert("¡Enlace copiado al portapapeles!");
+                    } catch(e) {}
+                  }
                 }}
                 style={{
                   padding: "13px 28px",
@@ -1590,7 +1613,7 @@ function ChatSection({
                   gap: 8,
                 }}
               >
-                💬 Compartir mi experiencia
+                ↗ Compartir mi experiencia
               </button>
 
               {/* Volver al menú */}
