@@ -1363,7 +1363,7 @@ function ChatSection({
   history, setHistory,
   timeLeft, setTimeLeft,
   chosenPlan, setChosenPlan,
-  onGoHome, onReset
+  onGoHome, onGoTeresa, onReset
 }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -1517,12 +1517,49 @@ function ChatSection({
           </div>
 
           <div className="chat-messages">
-            {messages.map((m, i) => (
-              <div key={i} className={`msg ${m.from}`}>
-                {m.from === "tarot" && <div className="msg-avatar">🔮</div>}
-                <div className="msg-bubble">{m.text}</div>
-              </div>
-            ))}
+            {messages.map((m, i) => {
+              const mentionsTeresa = m.from === "tarot" && (
+                m.text.toLowerCase().includes("teresa") ||
+                m.text.toLowerCase().includes("tarotista") && m.text.toLowerCase().includes("consulta")
+              );
+              return (
+                <div key={i}>
+                  <div className={`msg ${m.from}`}>
+                    {m.from === "tarot" && <div className="msg-avatar">🔮</div>}
+                    <div className="msg-bubble">{m.text}</div>
+                  </div>
+                  {mentionsTeresa && (
+                    <div style={{ display: "flex", justifyContent: "flex-start", paddingLeft: 42, marginTop: 8 }}>
+                      <button
+                        onClick={onGoTeresa}
+                        style={{
+                          background: "linear-gradient(135deg, #d4af37, #f0d060)",
+                          border: "none",
+                          borderRadius: 20,
+                          padding: "9px 18px",
+                          color: "#06030e",
+                          fontFamily: "var(--font-heading)",
+                          fontSize: "0.7rem",
+                          letterSpacing: "0.1em",
+                          textTransform: "uppercase",
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 7,
+                          boxShadow: "0 4px 16px rgba(212,175,55,0.3)",
+                          transition: "all 0.2s",
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.filter = "brightness(1.1)"}
+                        onMouseLeave={e => e.currentTarget.style.filter = "brightness(1)"}
+                      >
+                        🔮 Reservar consulta con Teresa
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
             {loading && (
               <div className="msg tarot">
                 <div className="msg-avatar">🔮</div>
@@ -1779,6 +1816,7 @@ export default function Mystika() {
           timeLeft={chatTimeLeft} setTimeLeft={setChatTimeLeft}
           chosenPlan={chosenPlan} setChosenPlan={setChosenPlan}
           onGoHome={() => setTab("home")}
+          onGoTeresa={() => setTab("teresa")}
           onReset={resetChat}
         />
       )}
